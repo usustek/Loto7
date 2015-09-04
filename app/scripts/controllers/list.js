@@ -19,4 +19,23 @@ angular.module('lotoApp')
       lotoData.fetchData();
     };
 
+    $scope.getData = function()
+    {
+      lotoData.getData(function(getted, rows){
+        if(getted){
+          $scope.rows = rows;
+        }
+        $scope.refreshData();
+      });
+    };
+    
+    $scope.refreshData = function(){
+        // 強制的にデータを反映
+        if(!$scope.$$phase){
+//            $scope.$apply(function () {
+//                $scope.target = 'value';
+//            });
+            $scope.$apply();
+        }
+    };
   });
