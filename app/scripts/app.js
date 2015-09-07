@@ -30,6 +30,11 @@ angular
         controller: 'AboutCtrl',
         controllerAs: 'about'
       })
+      .when('/forecast', {
+        templateUrl: 'views/forecast.html',
+        controller: 'ForecastCtrl',
+        controllerAs: 'forecast'
+      })
       .when('/list', {
         templateUrl: 'views/list.html',
         controller: 'ListCtrl',

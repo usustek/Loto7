@@ -15,6 +15,40 @@ angular.module('lotoApp')
       
       webdb: $window.openDatabase('lotodb', '', 'My Loto Database', 1024 * 1024 * 1),
 
+      // 予想データの作成
+      // 最頻値の取得
+      getForecast: function(loaded) {
+          var self = this;
+                    
+          try {
+            self.webdb.transaction(function(tr){
+              tr.executeSql("SELECT num, count(num) as count, sum(times) as weight, avg(times) as average FROM LOTODATA " +
+                            "GROUP BY num " +
+                            "ORDER BY weight DESC,count DESC",
+                            [],
+                            function(tr, rs) {
+                              var res = [];
+                              jQuery.each(rs.rows, function(idx, row) {
+                                res.push({
+                                  num: row.num,
+                                  count: row.count,
+                                  weight: row.weight,
+                                  average: row.average
+                                });
+                              });
+                              if((loaded !== undefined) && (loaded !== null)){
+                                loaded(true, res);
+                              }
+                            });
+            });
+          } catch (error) {
+            if((loaded !== undefined) && (loaded !== null)){
+              loaded(false, []);
+            }            
+          }
+      },
+      
+      // DBからのデータ取得
       getData: function(loaded) {
           var self = this;
           
@@ -31,13 +65,13 @@ angular.module('lotoApp')
                                   isBonus: row.isBunus
                                 });
                               });
-                              if(loaded !== null){
+                              if((loaded !== undefined) && (loaded !== null)) {
                                 loaded(true, res);
                               }
                             });
             });
           } catch (error) {
-            if(loaded !== null){
+            if((loaded !== undefined) && (loaded !== null)) {
               loaded(false, []);
             }            
           }
@@ -69,17 +103,17 @@ angular.module('lotoApp')
                   });
                 });
               });
-              if ( loaded !== null){
+              if ((loaded !== undefined) && (loaded !== null)){
                 loaded(true);
               }
             } catch (error) {
-              if ( loaded !== null){
+              if ((loaded !== undefined) && (loaded !== null)) {
                 loaded(false);
               }
             }
           },
           error: function(res) {
-              if ( loaded !== null){
+              if ((loaded !== undefined) && (loaded !== null)) {
                 loaded(false);
               }
           }
