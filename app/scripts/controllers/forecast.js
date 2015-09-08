@@ -32,14 +32,18 @@ angular.module('lotoApp')
     $scope.hoges = [{id:0, val:12 }, {id:1, val:11}];
     $scope.rows = [];
 
+    $scope.sort = function(exp, reverse) {
+      $scope.rows = $filter('orderBy')($scope.rows, exp, reverse);  
+    };
+    
     $scope.clearData = function()
     {
       $scope.rows = null;  
     };
     
-    $scope.getData = function()
+    $scope.getData = function(nearest)
     {
-      lotoData.getForecast(function(getted, rows){
+      lotoData.getForecast(nearest, function(getted, rows){
         if(getted){
           $scope.rows = rows;
         }

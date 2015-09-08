@@ -1,28 +1,8 @@
-<table st-table="rowCollection" class="table table-striped">
-	<thead>
-	<tr>
-		<th st-sort="getters.firstName">first name</th>
-		<th st-sort="lastName">last name</th>
-		<th st-sort="birthDate">birth date</th>
-		<th st-sort="balance" st-skip-natural="true" >balance</th>
-		<th>email</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr ng-repeat="row in rowCollection">
-		<td>{{row.firstName | uppercase}}</td>
-		<td>{{row.lastName}}</td>
-		<td>{{row.birthDate | date}}</td>
-		<td>{{row.balance | currency}}</td>
-		<td><a ng-href="mailto:{{row.email}}">email</a></td>
-	</tr>
-	</tbody>
-</table>
-
 <div class="jumbotron">
     <div class="btn-group">
-        <p><a class="btn btn-lg btn-success" ng-click="clearData()">Clear!<span class="glyphicon glyphicon-ok"></span></a></p>
-        <p><a class="btn btn-lg btn-success" ng-click="getData()">Get!<span class="glyphicon glyphicon-ok"></span></a></p>
+        <a class="btn btn-lg btn-success" ng-click="clearData()">Clear!<span class="glyphicon glyphicon-ok"></span></a>
+        <a class="btn btn-lg btn-success" ng-click="getData(true)">Get!<span class="glyphicon glyphicon-ok"></span></a>
+        <a class="btn btn-lg btn-success" ng-click="getData(false)">Get!<span class="glyphicon glyphicon-ok"></span></a>
     </div>
 </div>
 <div class="row marketing">
@@ -31,10 +11,14 @@
 <table class="table table-striped" st-table="rows">
     <therad>
     <tr>
-        <th st-sort="num">数字</th>
-        <th st-sort="count">頻度</th>
-        <th st-sort="weight">重み</th>
-        <th st-sort="average">平均</th>
+        <th st-sort="num"
+            ng-click="num=!num; sort('num',num)">数字</th>
+        <th st-sort="count"
+            ng-click="count=!count; sort('count',count)">頻度</th>
+        <th st-sort="weight"
+            ng-click="weight=!weight; sort('weight',weight)">重み</th>
+        <th st-sort="average"
+            ng-click="average=!average; sort('average',average)">平均</th>
     </tr>
     </therad>
     <tbody>
@@ -42,25 +26,8 @@
             <td>{{ ("0" + row.num).substr(-2) }}</td>
             <td>{{ row.count }}</td>
             <td>{{ row.weight }}</td>
-            <td>{{ row.average | number}}</td>
+            <td>{{ row.average | number: 2}}</td>
         </tr>
     </tbody>
 </table>
- <!--
-<div>
-    <div class="row">
-        <div class="col-xs-3"><p>数字</p></div>
-        <div class="col-xs-3"><p>頻度</p></div>
-        <div class="col-xs-3"><p>重み</p></div>
-        <div class="col-xs-3"><p>平均</p></div>
-    </div>
-</div>
-<div ng-repeat="row in rows">
-    <div class="row">
-        <div class="col-xs-3"><p>{{ ("0" + row.num).substr(-2) }}</p></div>
-        <div class="col-xs-3"><p>{{ row.count }}</p></div>
-        <div class="col-xs-3"><p>{{ row.weight }}</p></div>
-        <div class="col-xs-3"><p>{{ row.average | number}}</p></div>
-    </div>
-</div>
--->
+

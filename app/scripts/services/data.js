@@ -16,15 +16,18 @@ angular.module('lotoApp')
       webdb: $window.openDatabase('lotodb', '', 'My Loto Database', 1024 * 1024 * 1),
 
       // 予想データの作成
-      // 最頻値の取得
-      getForecast: function(loaded) {
+      // 重み付けによる値の取得
+      getForecast: function(nearest, loaded) {
           var self = this;
                     
           try {
+            var weight = nearest ? "sum(times)" : "sum(-times)";
+            var sql = "SELECT num, count(num) as count, " + weight + " as weight, avg(times) as average FROM LOTODATA " +
+                      "GROUP BY num " +
+                      "ORDER BY weight DESC,count DESC";
+
             self.webdb.transaction(function(tr){
-              tr.executeSql("SELECT num, count(num) as count, sum(times) as weight, avg(times) as average FROM LOTODATA " +
-                            "GROUP BY num " +
-                            "ORDER BY weight DESC,count DESC",
+              tr.executeSql(sql,
                             [],
                             function(tr, rs) {
                               var res = [];
