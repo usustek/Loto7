@@ -17,67 +17,68 @@ angular.module('lotoApp')
 
       // 予想データの作成
       // 重み付けによる値の取得
-      getForecast: function(nearest, loaded) {
-          var self = this;
-                    
-          try {
-            var weight = nearest ? "sum(times)" : "sum(-times)";
-            var sql = "SELECT num, count(num) as count, " + weight + " as weight, avg(times) as average FROM LOTODATA " +
-                      "GROUP BY num " +
-                      "ORDER BY weight DESC,count DESC";
+      getForecast: function (nearest, loaded) {
+        var self = this;
 
-            self.webdb.transaction(function(tr){
-              tr.executeSql(sql,
-                            [],
-                            function(tr, rs) {
-                              var res = [];
-                              jQuery.each(rs.rows, function(idx, row) {
-                                res.push({
-                                  num: row.num,
-                                  count: row.count,
-                                  weight: row.weight,
-                                  average: row.average
-                                });
-                              });
-                              if((loaded !== undefined) && (loaded !== null)){
-                                loaded(true, res);
-                              }
-                            });
-            });
-          } catch (error) {
-            if((loaded !== undefined) && (loaded !== null)){
-              loaded(false, []);
-            }            
+        try {
+          var weight = nearest ? "sum(times)" : "sum(-times)";
+          var average = nearest ? "avg(times)" : "avg(-times)"
+          var sql = "SELECT num, count(num) as count, " + weight + " as weight, " + average + " as average FROM LOTODATA " +
+            "GROUP BY num " +
+            "ORDER BY weight DESC,count DESC";
+
+          self.webdb.transaction(function (tr) {
+            tr.executeSql(sql,
+              [],
+              function (tr, rs) {
+                var res = [];
+                jQuery.each(rs.rows, function (idx, row) {
+                  res.push({
+                    num: row.num,
+                    count: row.count,
+                    weight: row.weight,
+                    average: row.average
+                  });
+                });
+                if ((loaded !== undefined) && (loaded !== null)) {
+                  loaded(true, res);
+                }
+              });
+          });
+        } catch (error) {
+          if ((loaded !== undefined) && (loaded !== null)) {
+            loaded(false, []);
           }
+        }
       },
       
       // DBからのデータ取得
-      getData: function(loaded) {
-          var self = this;
-          
-          try {
-            self.webdb.transaction(function(tr){
-              tr.executeSql("SELECT * FROM LOTODATA ORDER BY times, isBonus, num",
-                            [],
-                            function(tr, rs) {
-                              var res = [];
-                              jQuery.each(rs.rows, function(idx, row) {
-                                res.push({
-                                  times: row.times,
-                                  num: row.num,
-                                  isBonus: row.isBunus
-                                });
-                              });
-                              if((loaded !== undefined) && (loaded !== null)) {
-                                loaded(true, res);
-                              }
-                            });
-            });
-          } catch (error) {
-            if((loaded !== undefined) && (loaded !== null)) {
-              loaded(false, []);
-            }            
+      getData: function (loaded) {
+        var self = this;
+
+        try {
+          self.webdb.transaction(function (tr) {
+            tr.executeSql("SELECT * FROM LOTODATA ORDER BY times, isBonus, num",
+              [],
+              function (tr, rs) {
+                var res = [];
+                jQuery.each(rs.rows, function (idx, row) {
+                  res.push({
+                    times: row.times,
+                    num: row.num,
+                    isBonus: row.isBunus
+                  });
+                });
+                if ((loaded !== undefined) && (loaded !== null)) {
+                  loaded(true, res);
+                }
+              });
+          });
+        } catch (error) {
+          if ((loaded !== undefined) && (loaded !== null)) {
+            loaded(false, []);
           }
+        }
       },
        
       /* Webからデータを取得 */
